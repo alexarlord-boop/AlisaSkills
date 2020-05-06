@@ -35,7 +35,6 @@ sessionStorage = {}
 # Внутри функции доступен request.json - это JSON,
 # который отправила нам Алиса в запросе POST
 def main():
-    animals = ['слон', 'кролик']
     logging.info(f'Request: {request.json!r}')
 
     # Начинаем формировать ответ, согласно документации
@@ -45,7 +44,6 @@ def main():
         'session': request.json['session'],
         'version': request.json['version'],
         'response': {
-            'curanim': animals[0],
             'end_session': False
         }
     }
@@ -74,11 +72,10 @@ def handle_dialog(req, res):
                 "Не хочу.",
                 "Не буду.",
                 "Отстань!"
-            ],
-
+            ]
         }
         # Заполняем текст ответа
-        res['response']['text'] = f"Привет! Купи {res['curanim']}а!"
+        res['response']['text'] = 'Привет! Купи слона!'
         # Получим подсказки
         res['response']['buttons'] = get_suggests(user_id)
         return
@@ -98,14 +95,15 @@ def handle_dialog(req, res):
         'хорошо'
     ]:
         # Пользователь согласился, прощаемся.
-        res['response']['text'] = f"{res['curanim'].capitalize()}а можно найти на Яндекс.Маркете!"
+        res['response']['text'] = 'Слона можно найти на Яндекс.Маркете!'
 
         # res['response']['end_session'] = True
         req['session']['new'] = True
         return
 
     # Если нет, то убеждаем его купить слона!
-    res['response']['text'] = f"Все говорят '{req['request']['original_utterance']}', а ты купи {res['curanim'].capitalize()}а!"
+    res['response']['text'] = \
+        f"Все говорят '{req['request']['original_utterance']}', а ты купи слона!"
     res['response']['buttons'] = get_suggests(user_id)
 
 
